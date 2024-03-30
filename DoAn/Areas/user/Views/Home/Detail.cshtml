@@ -1,0 +1,414 @@
+﻿@model DoAn.Areas.admin.Models.Gao
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Areas/user/Views/Share/_layoutUser.cshtml";
+    int idGaox = 0;
+    var admin = HttpContextAccessor.HttpContext.Session.GetString("admin");
+    var name = HttpContextAccessor.HttpContext.Session.GetString("username");
+}
+
+<div class="container-fluid bg-secon-img mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color: #fff;">Chi tiết sản phẩm</h1>
+    </div>
+</div>
+
+<div class="container-fluid py-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-5 pb-5">
+            <div id="product-carousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner border">
+                    <div class="carousel-item active d-flex justify-content-center">
+                        @if (Model.tinhTrang == 0)
+                        {
+                            <img class="w-100 h-100" src="~/upload/@Model.HinhAnh" alt="" style="position: relative; max-width: 420px">
+                            <img src="~/upload/sold-out.png" style="position: absolute; width: 100%; left: 0; top: 0; object-fit: cover; height: 100%;" alt="">
+                        }
+                        else
+                        {
+                            <img class="w-100 h-100" src="~/upload/@Model.HinhAnh" alt="" style="max-width: 400px">
+                        }
+                    </div>
+                    @*<div class="carousel-item">
+                        <img class="w-100 h-100" src="~/user/img/product-2.jpg" alt="Image">
+                    </div>
+                    <div class="carousel-item">
+                        <img class="w-100 h-100" src="~/user/img/product-3.jpg" alt="Image">
+                    </div>
+                    <div class="carousel-item">
+                        <img class="w-100 h-100" src="~/user/img/product-4.jpg" alt="Image">
+                    </div>*@
+                </div>
+                <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
+                    <i class="fa fa-2x fa-angle-left text-dark"></i>
+                </a>
+                <a class="carousel-control-next" href="#product-carousel" data-slide="next">
+                    <i class="fa fa-2x fa-angle-right text-dark"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-7 pb-5">
+            <h3 class="font-weight-semi-bold">@Model.tenGao</h3>
+            <div class="d-flex mb-3">
+                <div class="color-start mr-2 start-title">
+                    @for (int starx = 1; starx <= 5; starx++)
+                    {
+                        if (starx <= Model.soSao)
+                        {
+                            <i class="fas fa-star"></i>
+                        }
+                        else
+                        {
+                            <i class="far fa-star"></i>
+                        }
+                    }
+                </div>
+                <span class="pt-1">(<span class="sumComment">@ViewBag.commentss.Count</span> Đánh giá)</span>
+            </div>
+            <h3 class="font-weight-semi-bold mb-4">@{string price = Model.giaBan.ToString("#,##0") + "₫";}@price<span class="currency-detail">/kg</span></h3>
+            <p class="mb-4">
+                @Model.moTa
+            </p>
+            @if(Model.tinhTrang == 1)
+            {
+                <form method="post" id="formProduct">
+                    <div class="d-flex mb-3">
+                        <p class="text-dark font-weight-medium mb-0 mr-3">Loại:</p>
+
+                        @{
+                            int i = 1;
+                        }
+                        @foreach (var tui in ViewBag.goi)
+                        {
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" required class="custom-control-input" value="@tui.quyCachDongGoi.khoiLuong" id="size-@i" name="size">
+                                <label class="custom-control-label" for="size-@i">@tui.quyCachDongGoi.khoiLuong kg</label>
+                            </div>
+                            { i++; }
+                        }
+                    </div>
+                    <div class="d-flex align-items-center mb-4 pt-2">
+                        <div class="input-group quantity mr-3" style="width: 130px;">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-primary btn-minus">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <input type="hidden" asp-for="Id" name="idGao" />
+                            <input type="hidden" asp-for="HinhAnh" name="hinhanh" />
+                            <input type="text" readonly class="form-control text-center" id="quantity" value="1" name="quatityProduct">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-primary btn-plus">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
+                        @*<button type="button" data-id ="1" class="check-click btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Chẹc</button>*@
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="nav nav-tabs justify-content-center border-secondary mb-4">
+                <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Đánh giá (<span class="sumComment">@ViewBag.commentss.Count</span>)</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3" style="display: none">Description</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2" style="display: none">Information</a>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane fade" id="tab-pane-3">
+                    <h4 class="mb-3">Product Description</h4>
+                    <p>
+                        Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed sed et, lorem duo et eos elitr,
+                        sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum
+                        dolor accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea invidunt.
+                    </p>
+                    <p>
+                        Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum. Amet dolore tempor consetetur sed lorem dolor sit lorem tempor. Gubergren amet amet labore sadipscing clita clita diam clita. Sea amet et sed ipsum lorem elitr
+                        et, amet et labore voluptua sit rebum. Ea erat sed et diam takimata sed justo. Magna takimata justo et amet magna et.
+                    </p>
+                </div>
+                <div class="tab-pane fade" id="tab-pane-2">
+                    <h4 class="mb-3">Additional Information</h4>
+                    <p>
+                        Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed sed et, lorem duo et eos elitr,
+                        sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum
+                        dolor accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea invidunt.
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item px-0">
+                                    Sit erat duo lorem duo ea consetetur, et eirmod takimata.
+                                </li>
+                                <li class="list-group-item px-0">
+                                    Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
+                                </li>
+                                <li class="list-group-item px-0">
+                                    Duo amet accusam eirmod nonumy stet et et stet eirmod.
+                                </li>
+                                <li class="list-group-item px-0">
+                                    Takimata ea clita labore amet ipsum erat justo voluptua. Nonumy.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item px-0">
+                                    Sit erat duo lorem duo ea consetetur, et eirmod takimata.
+                                </li>
+                                <li class="list-group-item px-0">
+                                    Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
+                                </li>
+                                <li class="list-group-item px-0">
+                                    Duo amet accusam eirmod nonumy stet et et stet eirmod.
+                                </li>
+                                <li class="list-group-item px-0">
+                                    Takimata ea clita labore amet ipsum erat justo voluptua. Nonumy.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade show active" id="tab-pane-1">
+                    <div class="row flex-wrap-reverse">
+                        @{int n = 0;}
+                        <div class="col-md-6">
+                            <h4 class="mb-4"><span class="sumComment">@ViewBag.commentss.Count</span> đánh giá cho "@Model.tenGao"</h4>
+                            <div style="height: 700px; overflow:scroll" class="bodyContent">
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="mb-4">Để lại đánh giá</h4>
+                            @*<form >*@
+                                <div class="d-flex my-3">
+                                    <p class="mb-0 mr-2">Đánh giá của bạn * :</p>
+                                    <div class="starts">
+@*                                        <i class="far fa-star cusor-poiter"></i>
+                                        <i class="far fa-star cusor-poiter"></i>
+                                        <i class="far fa-star cusor-poiter"></i>
+                                        <i class="far fa-star cusor-poiter"></i>
+                                        <i class="far fa-star cusor-poiter"></i>*@
+                                        <input type="radio" required id="star1" class="dis-none" checked name="star" value="1">
+                                        <label for="star1"><i class="fas fa-star cusor-poiter"></i></label>
+                                        <input type="radio" required id="star2" class="dis-none" name="star" value="2">
+                                        <label for="star2"><i class="far fa-star cusor-poiter"></i></label>
+                                        <input type="radio" required id="star3" class="dis-none" name="star" value="3">
+                                        <label for="star3"><i class="far fa-star cusor-poiter"></i></label>
+                                        <input type="radio" required id="star4" class="dis-none" name="star" value="4">
+                                        <label for="star4"><i class="far fa-star cusor-poiter"></i></label>
+                                        <input type="radio" required id="star5" class="dis-none" name="star" value="5">
+                                        <label for="star5"><i class="far fa-star cusor-poiter"></i></label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="message">Nhận xét của bạn *</label>
+                                    <textarea id="message" cols="30" required rows="5" class="form-control"></textarea>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <button type="button" class="btn btn-primary px-3 mb-4" id="postComment" onclick="handlePostComment()">Đăng</button>
+                                </div>
+                            @*</form>*@
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="IDgao" value="@Model.Id"/>
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function(){
+            $(".check-click").click(function(){
+                Swal.fire({
+                  position: "top-end",
+                  icon: "success",
+                  title: "Sản phẩm đã được thêm vào giỏ hàng",
+                  showConfirmButton: false,
+                  timer: 1500
+                });
+            })
+        })
+    getDataComment();
+        var IDgao = document.querySelector("#IDgao")
+        var mes = document.querySelector("#message")
+        var dataComment = [];
+        function getSelectedRating(){
+            var selectedRating = document.querySelector('input[name="star"]:checked');
+            if(selectedRating){
+                return selectedRating.value;
+            }
+            else{
+                return null;
+            }
+        }
+        function formatDateTime(dateTimeString) {
+            const dateObject = new Date(dateTimeString);
+
+            const day = dateObject.getDate();
+            const month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0, nên cộng thêm 1
+            const year = dateObject.getFullYear();
+            const hours = dateObject.getHours();
+            const minutes = dateObject.getMinutes();
+
+            // Định dạng ngày và thời gian
+            const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}`;
+
+            return formattedDateTime;
+        }
+        function getDataComment() {
+            $.ajax({
+                url: "/user/Home/GetComment",
+                method: "POST",
+                dataType: "json",
+                success: function (data) {
+                    // Xử lý dữ liệu ở đây, ví dụ: in ra console
+                    for (let i = 0; i < data.length; i++) {
+                        const comment = data[i];
+                        let titComment;
+                        let dateTimefortmat = formatDateTime(comment.thoiGian)
+                        let numStart = ` <div class="color-start mb-2 ">`;
+                        if (comment.loaiTaiKhoan === 1){
+                            titComment = `<h6 class="dis - inline" style="color:blue">${comment.taiKhoanTen} (Quản lý cửa hàng)✅<small> - <i class="mr - 2" style="color: #1C1C1C">${dateTimefortmat}</i></small></h6>`
+                        }
+                        else{
+                            titComment = `<h6 class="dis-inline">${comment.taiKhoanTen}<small> - <i class="mr-2">${dateTimefortmat}</i></small></h6>`
+                        }
+                        for (let x = 1; x <= 5; x++)
+                        {
+                            if (x <= comment.numStar)
+                            {
+                                numStart += `<i class="fas fa-star" > </i> `
+                            }
+                            else
+                            {
+                                numStart += `<i class="far fa-star" > </i> `
+                            }
+                        }
+                        numStart += `</div>`
+                        $('.bodyContent').append(`
+                        <div class="media mb-4">
+                            <img src="/upload/${comment.hinh}" alt="Image" class="img-fluid mr-3 mt-1 img-comment" style="width: 45px;">
+                            <div class="media-body">
+                                ${titComment}
+                                ${numStart}
+                                <p class="m-0">${comment.noiDung}</p>
+                            </div>
+                        </div>
+                    `);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log("Error:", textStatus, errorThrown);
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
+                        alert("Lỗi từ server: " + jqXHR.responseJSON.error);
+                    } else {
+                        alert("Không thể lấy dữ liệu");
+                    }
+                }
+                });
+        }
+        function getNewDataComment(newData){
+            let titComment;
+            let dateTimefortmat = formatDateTime(newData.thoiGian)
+            let numStart = ` <div class="color-start mb-2 ">`;
+            if (newData.loaiTK === 1) {
+                titComment = `<h6 class="dis - inline" style="color:blue">${newData.tentk} (Quản lý cửa hàng)✅<small> - <i class="mr - 2" style="color: #1C1C1C">${dateTimefortmat}</i></small></h6>`
+            }
+            else {
+                titComment = `<h6 class="dis-inline">${newData.tentk}<small> - <i class="mr-2">${dateTimefortmat}</i></small></h6>`
+            }
+            for (let x = 1; x <= 5; x++) {
+                if (x <= newData.soSao) {
+                    numStart += `<i class="fas fa-star" > </i> `
+                }
+                else {
+                    numStart += `<i class="far fa-star" > </i> `
+                }
+            }
+            numStart += `</div>`
+            $('.bodyContent').prepend(`
+                                <div class="media mb-4">
+                                            <img src="/upload/${newData.hinh}" alt="Image" class="img-fluid mr-3 mt-1 img-comment" style="width: 45px;">
+                                    <div class="media-body">
+                                        ${titComment}
+                                        ${numStart}
+                                        <p class="m-0">${newData.noiDung}</p>
+                                    </div>
+                                </div>
+                            `);
+            var allElements = $('.sumComment');
+
+            // Duyệt qua từng phần tử và cập nhật giá trị
+            allElements.each(function () {
+                // Lấy nội dung hiện tại của phần tử
+                var currentContent = $(this).text();
+
+                // Chuyển nội dung hiện tại thành số (nếu có)
+                var currentNumber = parseInt(currentContent) || 0;
+
+                // Thêm 2 vào số hiện tại
+                var newNumber = currentNumber + 1;
+
+                // Cập nhật nội dung của phần tử
+                $(this).text(newNumber);
+            });
+        }
+        function handlePostComment(){
+            var rating = getSelectedRating();
+            var x = { 'numStar': rating, 'comment': mes.value, 'idgao': parseInt(IDgao.value) }
+            $.ajax({
+                url: "/user/Home/Comment",
+                method: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data:JSON.stringify(x),
+                success: function (response) {
+                     console.log("SUCCESS");
+                    console.log(response.data);
+                    if (response.data === undefined) {
+                        alert("Vui lòng đăng nhập để dùng tính năng này");
+                    }
+                    var commentData = response.data;
+                    getNewDataComment(commentData)
+                    var startTitle = response.sao;
+                    var startWrite = "";
+                    for (let x = 1; x <= 5; x++)
+                        {
+                            if (x <= startTitle)
+                            {
+                            startWrite += `<i class="fas fa-star" > </i> `
+                            }
+                            else
+                            {
+                                startWrite += `<i class="far fa-star" > </i> `
+                            }
+                        }
+                    $(".start-title").empty()
+                    $(".start-title").append(startWrite)
+                    console.log(startTitle)
+                    if (response.success) {
+                        var commentData = response.data;
+                        console.log(commentData);
+                    } else {
+                        console.log("Error:", response.error);
+                        alert("Đã xảy ra lỗi: " + response.error); // Hiển thị thông báo lỗi cho người dùng
+                    }
+                    
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log("Error:", textStatus, errorThrown);
+                    alert("Không thể kết nối đến server"); // Hiển thị thông báo lỗi cho người dùng
+                }
+            })
+        }
+
+    </script>
+}

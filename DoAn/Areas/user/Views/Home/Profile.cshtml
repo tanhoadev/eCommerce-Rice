@@ -1,0 +1,90 @@
+﻿@model DoAn.Areas.admin.Models.KhachHang
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Areas/user/Views/Share/_layoutUser.cshtml";
+}
+
+<div class="container-fluid bg-secon-img mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color: #fff;">Thông tin tài khoản</h1>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="main-body">
+        <form method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex flex-column align-items-center text-center">
+                                <img src="~/upload/@Model.AnhDaiDien" alt="Admin" class="rounded-circle p-1 img-profile">
+                                <div class="mt-3">
+                                    <h4>@Model.taiKhoan.taiKhoan</h4>
+                                    <input type="file" name="avatar" class="btn btn-primary" id="img-profile" accept="image/*" hidden onchange="document.querySelector('.img-profile').src = window.URL.createObjectURL(this.files[0])">
+                                    <label for="img-profile" class="btn btn-primary">Cập nhật ảnh</label>
+                                    <input type="hidden" asp-for="Id" />
+                                    <input type="hidden" asp-for="IDTaiKhoan" />
+                                    <input type="hidden" asp-for="AnhDaiDien" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Tên tài khoản</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" class="form-control" value="@Model.taiKhoan.taiKhoan" readonly>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Họ và tên</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" asp-for="hoTen" required class="form-control" value="@Model.hoTen" maxlength="19">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Email</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="email" asp-for="email" required class="form-control" value="@Model.email">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Số điện thoại</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" asp-for="sDT" required class="form-control" value="@Model.sDT">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Ngày sinh</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="date" asp-for="ngaySinh" id="datepicker" required class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-9 text-secondary">
+                                    <button type="submit" class="btn btn-primary px-4">Lưu thay đổi</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+    </div>
+</div>

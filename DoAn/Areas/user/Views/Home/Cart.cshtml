@@ -1,0 +1,229 @@
+﻿@model IEnumerable<DoAn.Areas.admin.Models.ChiTietGioHang>;
+@{
+    ViewData["Title"] = "Cart";
+    Layout = "~/Areas/user/Views/Share/_layoutUser.cshtml";
+}
+@{
+    List<DoAn.Areas.admin.Models.ChiTietGioHang> hang = new List<DoAn.Areas.admin.Models.ChiTietGioHang>();
+    decimal sum = 0;
+}
+
+<div class="container-fluid bg-secon-img mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color: #fff;">Giỏ hàng</h1>
+    </div>
+</div>
+
+<div class="container-fluid pt-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-8 table-responsive mb-5">
+            <div class="row d-flex justify-content-end p-0-16">
+                <button type="button" id="btnUpdate" class="btn btn-sm btn-primary fw-bold p-10-16 fz-16 btn-plus" onclick="btnclick1()">Cập nhật giỏ hàng</button>
+            </div>
+            <table class="table table-bordered text-center mb-0" id="tableCartDetails">
+                <thead class="bg-secondary text-dark">
+                    <tr class="text-white">
+                        <th>Mặt hàng</th>
+                        <th>Giá /kg</th>
+                        <th>Số lượng</th>
+                        <th>Loại túi</th>
+                        <th>Tổng tiền</th>
+                        <th>Xóa</th>
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                        @foreach (var product in Model)
+                        {
+                            <tr>
+                            <td class="align-middle"><img src="~/upload/@product.hinhAnh" alt="" style="width: 50px;">@product.gao.tenGao</td>
+                            <td class="align-middle money">@{string price = product.gao.giaBan.ToString("#,##0") + "₫";}@price</td>
+                            <td class="align-middle">
+                                <div class="input-group quantity mx-auto" style="width: 100px;">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-sm btn-primary btn-minus">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm text-center productQuantity" readonly id="quantity" value="@product.soLuong">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-sm btn-primary btn-plus">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="align-middle">@product.khoiLuong kg</td>
+                            <td class="align-middle money">@{
+                                    decimal priceatmp = product.gao.giaBan * product.soLuong * product.khoiLuong;
+                                    sum += priceatmp;
+                                    string price1 = (priceatmp).ToString("#,##0") + "₫";
+                                }@price1</td>
+                            <form method="post" asp-action="DeleteProduct" id="deteteform" asp-route-id="@product.Id">
+                            <td class="align-middle"><button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-times"></i></button></td>
+                            </form>
+                        </tr>
+                        DoAn.Areas.admin.Models.ChiTietGioHang x = new DoAn.Areas.admin.Models.ChiTietGioHang();
+                            x.Id = product.Id; x.IDGao = product.IDGao; x.IDGioHang = product.IDGioHang; x.soLuong = product.soLuong; x.khoiLuong = product.khoiLuong; x.hinhAnh = product.hinhAnh;
+                            hang.Add(x);
+                        }
+                        
+                </tbody>
+            </table>
+            @if (Model.Count() == 0)
+            {
+                <tr>
+                    <div class="col-lg-12 col-md-12 col-sm-12 pb-1 p-0">
+                        <div class="card border-0 mb-4">
+                            <div class="card-header product-img position-relative d-flex justify-content-center overflow-hidden bg-transparent border p-0">
+                                <img class="img-fluid w-100" style="max-width: 632px; " src="~/upload/empty.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </tr>
+            }
+        </div>
+        <h1 id="#1"></h1>
+        <div class="col-lg-4">
+            <div class="card border-secondary mb-5 m-0">
+                <div class="card-header bg-secondary border-0">
+                    <h4 class="font-weight-semi-bold m-0 text-white">Cộng giỏ hàng</h4>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3 pt-1">
+                        <h6 class="font-weight-medium">Tạm tính</h6>
+                        <h6 class="font-weight-700 money">@{string pricetmp = sum.ToString("#,##0") + "₫";}@pricetmp</h6>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <h6 class="font-weight-medium">Phí vận chuyển</h6>
+                        <h6 class="font-weight-700 money">0₫</h6>
+                    </div>
+                </div>
+                <div class="card-footer border-secondary bg-transparent">
+                    <div class="d-flex justify-content-between mt-2">
+                        <h5 class="font-weight-bold">Tổng</h5>
+                        <h5 class="font-weight-bold money">@{
+                                string priceall = sum.ToString("#,##0") + "₫";
+                            }@priceall</h5>
+                    </div>
+                    <form method="post" asp-action="CheckOut">
+                        @if(Model.Count() > 0){
+                            <button type="submit" class="btn btn-block btn-primary my-3 py-3">Tiến hành thanh toán</button>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //$(document).ready(function(){
+    //    var listOfDetailCart = new Array();
+    //    $("#tableCartDetails").find("tr:gt(0)")
+    //})
+    function Update(){
+        console.log("clicked")
+    }
+    
+</script>
+@*@section Scripts{
+    <script>
+        var myData = { Id: 7, IDGao = 1 };
+        var val = JSON.stringify(myData);
+        console.log(val);
+
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: '/Home/UpdateCart',
+            contentType: 'application/json',
+            data: val,
+            success: function (xhr, status, response) {
+                console.log(response);
+                $('#1').html(response.responseText);
+            },
+            error: function (err) {
+                alert("error - " + err);
+            }
+        });
+    </script>
+}*@
+
+@{
+
+}
+
+@section Scripts{
+    <script>
+        var myData = @Html.Raw(Json.Serialize(hang));
+        var danhSach = [];
+        
+        function handleInputChange() {
+            danhSach = []; // Đặt lại danh sách
+           
+            var inputFields = document.querySelectorAll('.productQuantity');
+
+            inputFields.forEach(function (input) {
+                var giaTri = parseInt(input.value);
+                danhSach.push(giaTri);
+            });
+        }
+
+        // Gắn sự kiện change vào các ô input
+        var inputFields = document.querySelectorAll('.productQuantity');
+        var minusx = document.querySelectorAll('.btn-minus')
+        var plusx = document.querySelectorAll('.btn-plus')
+        minusx.forEach(function(input){
+            input.addEventListener('click', handleInputChange)
+        });
+        plusx.forEach(function (input) {
+            input.addEventListener('click', handleInputChange)
+        });
+        inputFields.forEach(function (input) {
+            input.addEventListener('change', handleInputChange);
+        });
+        function btnclick1() {
+            var firstRequestCompleted = false;
+            console.log(myData)
+            $.ajax({
+                url: "/user/Home/Quantityx",
+                method: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(danhSach),
+                success: function (data) {
+                    console.log(data)
+                    console.log("SUCCESS");
+                    console.log(JSON.stringify(data));
+                    firstRequestCompleted = true;
+                },
+                error: function () {
+                    console.log("NO");
+                    // Xử lý lỗi nếu cần
+                }
+            });
+
+            $(document).ajaxStop(function () {
+                if (firstRequestCompleted) {
+                    $.ajax({
+                        url: "/user/Home/UpdateCart",
+                        method: "POST",
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(myData),
+                        success: function (data) {
+                            console.log("SUCCESS");
+                            console.log(JSON.stringify(myData));
+                            console.log(data)
+                        },
+                        error: function () {
+                            console.log("NO");
+                            // Xử lý lỗi nếu cần
+                        }
+                    });
+                }
+            });
+
+            location.reload();
+        }
+
+    </script>
+}

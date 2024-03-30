@@ -1,0 +1,261 @@
+﻿@using Microsoft.AspNetCore.Http;
+
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    Layout = null;
+    var name = HttpContextAccessor.HttpContext.Session.GetString("username");
+    var avatar = HttpContextAccessor.HttpContext.Session.GetString("avatar");
+    var admin = HttpContextAccessor.HttpContext.Session.GetString("admin");
+    var quantityCart = HttpContextAccessor.HttpContext.Session.GetString("soluong");
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>EShopper - Bootstrap Shop Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/user/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/user/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row bg-secondary d-flex justify-content-center px-xl-5">
+            <img src="~/user/img/top_banner.png" class="img-top" alt="ss">
+        </div>
+        <div class="row align-items-center py-3 px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <a href="" class="text-decoration-none">
+                    <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">Q</span>uyên</h1>
+                </a>
+            </div>
+            <div class="col-lg-5 col-5 text-left">
+                <form asp-action="SearchProduct" method="get" asp-area="user" asp-controller="Home">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="nameProduct" placeholder="Tìm kiếm sản phẩm">
+                        <button type="submit" style="background: transparent; border: none; padding: 0;">
+                            <span class="input-group-text bg-transparent text-primary" style="height: 100%">
+                                <i class="fa fa-search"></i>
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            @if (!string.IsNullOrEmpty(name))
+            {
+                <div class="col-lg-4 d-flex align-items-center just-end col-6 text-right">
+                    <a asp-action="Cart" asp-controller="Home" asp-area="user" class="btn border">
+                        <i class="fas fa-shopping-cart text-primary"></i>
+                        <span class="badge">@quantityCart</span>
+                    </a>
+                    <div class="col-lg-3 profile-pc">
+                        <div class="nav-item dropdown">
+                            <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action" style="color: #1C1C1C;">
+                                <img src="~/upload/@avatar" class="img-user-nav" alt="Avatar">@name<b class="caret"></b>
+                            </a>
+                            <div class="dropdown-menu">
+                                <a asp-action="Profile" asp-controller="Home" asp-area="user" class="dropdown-item"><i class="fas fa-user"></i> Tài khoản của tôi</a>
+                                <a asp-action="Order" asp-controller="Home" asp-area="user" class="dropdown-item"><i class="fas fa-money-check"></i> Đơn mua</a>
+                                <a asp-action="ChangePassWord" asp-controller="Home" asp-area="user" class="dropdown-item"><i class="fas fa-exchange-alt"></i> Đổi mật khẩu</a>
+                                <div class="dropdown-divider"></div>
+                                <a asp-action="LogOut" asp-controller="Home" asp-area="user" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>            
+            }
+        </div>
+    </div>
+    <!-- Topbar End -->
+    <!-- Navbar Start -->
+    <div class="container-fluid">
+        <div class="row border-top px-xl-5">
+            <div class="col-lg-12">
+                <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
+                    <a href="" class="text-decoration-none d-block d-lg-none">
+                        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
+                    </a>
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse navbar-mobile justify-content-between" id="navbarCollapse">
+                        <div class="navbar-nav mr-auto py-0">
+                            <a asp-action="Index" asp-controller="Home" asp-area="user" class="nav-item nav-link active">Trang chủ</a>
+                            <a asp-action="Shop" asp-controller="Home" asp-area="user" asp-route-all ="1" class="nav-item nav-link">Cửa hàng</a>
+                            @if (!string.IsNullOrEmpty(admin))
+                            {
+                                <a asp-action="Index" asp-controller="Home" asp-area="admin" class="nav-item nav-link">Quản lí</a>
+                            }
+                        </div>
+                        <div class="navbar-nav ml-auto py-0 align-items-center">
+                            @if(string.IsNullOrEmpty(name)){
+                                <a asp-action="Index" asp-controller="Login" asp-area="null" class="nav-item nav-link">Đăng Nhập</a>
+                                <a asp-action="Index" asp-controller="Register" asp-area="null" class="nav-item nav-link">Đăng Kí</a>
+                            }
+                            @if (!string.IsNullOrEmpty(name))
+                            {
+                                <div class="nav-item dropdown profile-mobile">
+                                    <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action" style="color: #1C1C1C;">
+                                        <img src="~/upload/@avatar" class="img-user-nav" alt="Avatar">@name<b class="caret"></b>
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a asp-action="Profile" asp-controller="Home" asp-area="user" class="dropdown-item"><i class="fas fa-user"></i> Tài khoản của tôi</a>
+                                        <a asp-action="Order" asp-controller="Home" asp-area="user" class="dropdown-item"><i class="fas fa-money-check"></i> Đơn mua</a>
+                                        <a asp-action="ChangePassWord" asp-controller="Home" asp-area="user" class="dropdown-item"><i class="fas fa-exchange-alt"></i> Đổi mật khẩu</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a asp-action="LogOut" asp-controller="Home" asp-area="user" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </nav>
+
+            </div>
+        </div>
+    </div>
+    @RenderBody()
+    <footer class=" text-lg-start bg-secondary text-white">
+        <!-- Grid container -->
+        <div class="container-fluid p-4 pb-0">
+            <!-- Section: Links -->
+            <section class="">
+                <!--Grid row-->
+                <div class="row">
+                    <!-- Grid column -->
+                    <div class="col-md-7 col-lg-8 col-xl-7 mx-auto mt-3" style="margin: 0 !important">
+                        <h6 class="text-uppercase mb-4 font-weight-bold">
+                            <h1 class="mb-4 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border border-white px-3 mr-1" style="color: #fff !important">Q</span>uyên</h1>
+                        </h6>
+                        <p>
+                            Chào mừng đến với cửa hàng gạo của chúng tôi, nơi bạn có thể tìm thấy những hạt gạo chất lượng cao mang lại sự tươi ngon và dinh dưỡng cho mỗi bữa ăn.
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+
+                    <hr class="w-100 clearfix d-md-none" />
+
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+
+                    <hr class="w-100 clearfix d-md-none" />
+
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <hr class="w-100 clearfix d-md-none" />
+
+                    <!-- Grid column -->
+                    <div class="col-md-5 col-lg-4 col-xl-5 mx-auto mt-3">
+                        <h6 class="text-uppercase mb-4 font-weight-bold">Liên hệ</h6>
+                        <p><i class="fas fa-home mr-3"></i>134 Linh Trung, Phường Linh Trung, Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam</p>
+                        <p><i class="fas fa-envelope mr-3"></i> shopquyen@gmail.com</p>
+                        <p><i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
+                        <p><i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
+                    </div>
+                    <!-- Grid column -->
+                </div>
+                <!--Grid row-->
+            </section>
+            <!-- Section: Links -->
+
+            <hr class="my-3">
+
+            <!-- Section: Copyright -->
+            <section class="p-3 pt-0">
+                <div class="row align-items-center">
+                    <!-- Grid column -->
+                    <div class="col-md-6 mx-auto d-flex justify-content-center col-lg-6 text-md-start">
+                        <!-- Copyright -->
+                        <div class="">
+                            © 2020 Copyright:
+                            <a class="text-white" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+                        </div>
+                        <!-- Copyright -->
+                    </div>
+                    <!-- Grid column -->
+                    <!-- Grid column -->
+                    <div class="col-md-6 p-md-6 col-lg-6 mt-3 mx-auto d-flex justify-content-center text-md-end" style="justify-content: flex-start; margin-right: calc(auto - 12px);">
+                        <!-- Facebook -->
+                        <a class="btn btn-outline-light btn-floating m-1"
+                           class="text-white"
+                           role="button">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+
+                        <a class="btn btn-outline-light btn-floating m-1" class="text-white" role="button">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+
+                        <!-- Google -->
+                        <a class="btn btn-outline-light btn-floating m-1" class="text-white" role="button">
+                            <i class="fab fa-google"></i>
+                        </a>
+
+                        <!-- Instagram -->
+                        <a class="btn btn-outline-light btn-floating m-1" class="text-white" role="button">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                    <!-- Grid column -->
+                </div>
+            </section>
+            <!-- Section: Copyright -->
+        </div>
+        <!-- Grid container -->
+    </footer>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+    
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="~/user/lib/easing/easing.min.js"></script>
+    <script src="~/user/lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <!-- <script src="mail/jqBootstrapValidation.min.js"></script> -->
+    <script src="~/user/js/contact.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/user/js/contact.js"></script>
+    <script src="~/user/js/province.js"></script>
+    <script>
+        function btnclick(){
+            $.ajax({
+                url: "/Home/Index",
+                method: "GET",
+                success: function (){
+                    console.log("SUCCESS");
+                },
+                error: function(){
+                    console.log("NO");
+                }
+            })
+        }
+    </script>
+    <!-- Template Javascript -->
+    <script src="~/user/js/main.js"></script>
+    @await Component.InvokeAsync("NToastNotify")
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

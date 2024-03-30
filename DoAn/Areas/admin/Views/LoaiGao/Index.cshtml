@@ -1,0 +1,89 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/admin/Views/Share/_layoutAdmin.cshtml";
+}
+@model IEnumerable<DoAn.Areas.admin.Models.LoaiGao>
+<div class="row justify-content-between">
+    <div class="col-lg-4 col-md-4 p-r-0 title-margin-right">
+        <div class="page-header">
+            <div class="page-title">
+                <h1>Xin chào, <span class="fw-b fz-18">Admin</span></h1>
+            </div>
+        </div>
+    </div>
+    <!-- /# column -->
+    <div class="col-lg-6 col-md-6 title-margin-left">
+        <div class="page-header">
+            <div class="page-title">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Loại gạo</a></li>
+                    <li class="breadcrumb-item active">Danh sách</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- /# column -->
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="data_table card" style="overflow-x: scroll">
+                <a asp-action="Create" asp-controller="LoaiGao" asp-area="admin" class="btn btn-lg btn-success btn-block waves-effect waves-light">
+                    <i class="ti-plus fw-b"></i> Tạo mới
+                </a>
+                <!-- Modal HTML -->
+                <table id="example" class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên loại gạo</th>
+                            <th>Hình ảnh</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach(var loaigao in Model)
+                            {
+                                <div id="myModal-@loaigao.Id" class="modal fade">
+                                    <div class="modal-dialog modal-confirm">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <div class="icon-box">
+                                                    <i class="ti-close"></i>
+                                                </div>
+                                                <h4 class="modal-title">Bạn chắc chắn chứ?</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Bạn có chắc muốn xóa các bản ghi này không? Thao tác này không thể hoàn tác</p>
+                                            </div>
+                                            <form method="post" asp-action="Delete" asp-route-id ="@loaigao.Id">
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-info" data-dismiss="modal">Hủy bỏ</button>
+                                                    <button type="submit" class="btn btn-danger">Xóa</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <tr>
+                                    <td>@loaigao.Id</td>
+                                    <td>@loaigao.tenLoaiGao</td>
+                                    <td><img src="~/upload/@loaigao.hinhAnh" class="mxW-200px" /></td>
+                                    <td>
+                                        <div class="d-flex justify-content-end">
+                                            <a asp-action="Update" asp-controller="LoaiGao" asp-route-id = "@loaigao.Id"><i class="ti-pencil button-add"></i></a>
+                                            <a href="#myModal-@loaigao.Id" data-toggle="modal"><i class="ti-trash button-remove"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

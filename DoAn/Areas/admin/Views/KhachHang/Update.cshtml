@@ -1,0 +1,113 @@
+﻿@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/admin/Views/Share/_layoutAdmin.cshtml";
+}
+<div class="row justify-content-between">
+    <div class="col-lg-4 col-md-4 p-r-0 title-margin-right">
+        <div class="page-header">
+            <div class="page-title">
+                <h1>Xin chào, <span class="fw-b fz-18">Admin</span></h1>
+            </div>
+        </div>
+    </div>
+    <!-- /# column -->
+    <div class="col-lg-6 col-md-6 title-margin-left">
+        <div class="page-header">
+            <div class="page-title">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="KhachHang" asp-area="admin">Khách hàng</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="KhachHang" asp-area="admin">Danh sách</a></li>
+                    <li class="breadcrumb-item active">Sửa</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- /# column -->
+</div>
+
+<div class="container-fluid card overflow-scroll">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="horizontal-form-elements">
+                <form id="form-horizontal">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-sm-2 col-md-12 control-label">Họ tên</label>
+                                <div class="col-sm-10">
+                                    <input type="text" required class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-sm-2 col-md-12 control-label">Email</label>
+                                <div class="col-sm-10">
+                                    <input type="email" required class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-sm-2 col-md-12 control-label">Số điện thoại</label>
+                                <div class="col-sm-10">
+                                    <input type="text" required class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-sm-2 col-md-12 control-label">Ngày sinh</label>
+                                <div class="col-sm-10">
+                                    <input type="date" required class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="tk" class="col-sm-2 col-md-12 control-label">Tài khoản</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control appe-auto" id="tk">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /# column -->
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-sm-2 col-md-12 control-label">Ảnh đại diện</label>
+                                <div class="col-sm-10">
+                                    <img src="kk" class="image-Loai" />
+                                    <input type="file" onchange="document.querySelector('.image-Loai').src = window.URL.createObjectURL(this.files[0]) " required accept="image/*" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /# column -->
+                    </div>
+                </form>
+            </div>
+            <!-- /# card -->
+        </div>
+        <!-- /# column -->
+    </div>
+    <div class="row justify-content-end">
+        <div class="col-3">
+            <a asp-action="Index" asp-controller="KhachHang" asp-area="admin" class="btn btn-lg btn-success btn-block waves-effect waves-light">
+                <i class="ti-arrow-left fw-b"></i> Quay về danh sách
+            </a>
+        </div>
+        <div class="col-3">
+            <button type="submit" form="form-horizontal" class="btn btn-lg btn-success btn-block waves-effect waves-light">
+                <i class="ti-save fw-b"></i> Lưu
+            </button>
+        </div>
+    </div>
+</div>
+
+

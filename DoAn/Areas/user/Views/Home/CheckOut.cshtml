@@ -1,0 +1,129 @@
+﻿@model DoAn.Areas.admin.Models.HoaDon
+@{
+    ViewData["Title"] = "CheckOut";
+    Layout = "~/Areas/user/Views/Share/_layoutUser.cshtml";
+    var sum = 0;
+}
+
+<div class="container-fluid bg-secon-img mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color: #fff;">Thanh toán</h1>
+    </div>
+</div>
+
+<div class="container-fluid pt-5">
+    <form method="post" id="infoCustomer" asp-area="user" asp-action="Payment" asp-controller="Home">
+        <div class="row px-xl-5">
+            <div class="col-lg-8">
+                <div class="mb-4">
+                    <h4 class="font-weight-semi-bold mb-4">Thông tin khách hàng</h4>
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label>Họ và tên</label>
+                            <input class="form-control" asp-for="hoTen" value="@ViewBag.khachhang.hoTen" required type="text">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Email</label>
+                            <input class="form-control" asp-for="eMail" value="@ViewBag.khachhang.email" required type="email">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Số điện thoại</label>
+                            <input class="form-control" asp-for="sDt" value="@ViewBag.khachhang.sDT" required type="text">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Tỉnh / thành</label>
+                            <select name="" class="custom-select" asp-for="TinhThanh" required id="province">
+                            </select>
+                            <input type="hidden" value="" name="tinhThanh" id="provinceValue" />
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Quận / huyện</label>
+                            <select name="" class="custom-select" asp-for="QuanHuyen" required id="district">
+                                <option value="">chọn quận</option>
+                            </select>
+                            <input type="hidden" value="" name="quanHuyen" id="districtValue" />
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Phường / xã</label>
+                            <select name="" class="custom-select" asp-for="PhuongXa" required id="ward">
+                                <option value="">chọn phường</option>
+                            </select>
+                            <input type="hidden" value="" name="phuongXa" id="wardValue" />
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Số Nhà, Tên Đường</label>
+                            <input class="form-control" asp-for="SoNha" required type="text">
+                        </div>
+                    </div>
+                    <input type="hidden" id="sumPrice" name="gia" asp-for="Gia" value="" />
+                    <input type="hidden" asp-for="IDKhachHang" value="@ViewBag.khachhang.Id" />
+
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-secondary mb-5">
+                    <div class="card-header bg-secondary border-0">
+                        <h4 class="font-weight-semi-bold m-0 text-white">Tổng số đơn hàng</h4>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="font-weight-medium mb-3">Các sản phẩm</h5>
+                        @foreach (var item in ViewBag.productCarts)
+                        {
+                            <div class="d-flex justify-content-between">
+                                <p>@item.gao.tenGao loại @item.khoiLuong kg X @item.soLuong</p>
+                                @{
+                                    sum += item.gao.giaBan * item.khoiLuong * item.soLuong;
+                                }
+                                <p class="money">@{
+                                        string priceItem = (item.gao.giaBan * item.khoiLuong * item.soLuong).ToString("#,##0") + "₫";
+                                    }@priceItem</p>
+                            </div>
+                        }
+                        <hr class="mt-0">
+                        <div class="d-flex justify-content-between mb-3 pt-1">
+                            <h6 class="font-weight-medium">Tạm tính</h6>
+                            <h6 class="font-weight-700 money">@{
+                                    string price = sum.ToString("#,##0") + "₫";
+                                }@price</h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">Phí vận chuyển</h6>
+                            <h6 class="font-weight-700 money">0₫</h6>
+                        </div>
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5 class="font-weight-bold">Tổng</h5>
+                            <h5 class="font-weight-bold money">@{
+                                    string priceall = sum.ToString("#,##0") + "₫";
+                                }@priceall</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="card border-secondary mb-5">
+                    <div class="card-header bg-secondary border-0">
+                        <h4 class="font-weight-semi-bold m-0 text-white">Phương thức thanh toán</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" required class="custom-control-input" name="payment" value="1" id="paypal">
+                                <label class="custom-control-label" for="paypal">Stripe</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" required class="custom-control-input" name="payment" value="2" id="paypa1l">
+                                <label class="custom-control-label" for="paypa1l">VnPay</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        <button type="submit" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Đặt hàng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<input type="hidden" value="@sum" id="sumPriceSource" />
+
+

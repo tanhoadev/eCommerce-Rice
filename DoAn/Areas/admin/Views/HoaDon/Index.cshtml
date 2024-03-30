@@ -1,0 +1,256 @@
+﻿@model IEnumerable<DoAn.Areas.admin.Models.HoaDon>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/admin/Views/Share/_layoutAdmin.cshtml";
+    List<IEnumerable<DoAn.Areas.admin.Models.ChiTietHoaDon>> hoadonList = new List<IEnumerable<DoAn.Areas.admin.Models.ChiTietHoaDon>>();
+    for (int n = 0; n < Model.Count(); n++)
+    {
+        IEnumerable<DoAn.Areas.admin.Models.ChiTietHoaDon> hoadon = ViewData["hoadon" + n] as IEnumerable<DoAn.Areas.admin.Models.ChiTietHoaDon>;
+        hoadonList.Add(hoadon);
+    }
+}
+
+<div class="row justify-content-between">
+    <div class="col-lg-4 col-md-4 p-r-0 title-margin-right">
+        <div class="page-header">
+            <div class="page-title">
+                <h1>Xin chào, <span class="fw-b fz-18">Admin</span></h1>
+            </div>
+        </div>
+    </div>
+    <!-- /# column -->
+    <div class="col-lg-6 col-md-6 title-margin-left">
+        <div class="page-header">
+            <div class="page-title">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Hóa đơn</a></li>
+                    <li class="breadcrumb-item active">Danh sách</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- /# column -->
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="data_table card" style="overflow-x: scroll">
+                <!-- Modal HTML -->
+                <table id="example" class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Gia</th>
+                            <th>Ngày thanh toán</th>
+                            <th>Khách hàng</th>
+                            <th>Trạng thái</th>
+                            <th>Tỉnh / thành</th>
+                            <th>Quận / huyện</th>
+                            <th>Phường / xã</th>
+                            <th>Số nhà</th>
+                            <th>Kiểm duyệt</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 0;
+                            int indexx = 0;
+                            foreach(var item in Model)
+                            {
+                                <div class="modal  fade p-0" id="Modal@(indexx)" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-xl">
+                                        <div class="modal-content Modal1" style="border-radius: 13px;">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body p-0">
+                                                <div class="card m-0" style="border-radius: 10px;">
+                                                    <div class="card-body p-4">
+                                                        <div class="invoice-title">
+                                                            <div class="d-flex justify-content-between">
+                                                                <div class="mb-4">
+                                                                    <h2 class="mb-1 text-muted">Gạo Quyên</h2>
+                                                                </div>
+                                                                <h4 class="font-size-15">Hóa đơn #@item.Id</h4>
+                                                            </div>
+                                                            <div class="text-muted">
+                                                                <p class="mb-1">134 Linh Trung, Phường Linh Trung, Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam</p>
+                                                                <p class="mb-1"><i class="uil uil-envelope-alt me-1"></i> shopquyen@gmail.com</p>
+                                                                <p><i class="uil uil-phone me-1"></i> 012-345-6789</p>
+                                                            </div>
+                                                        </div>
+                                                        <hr class="my-4">
+
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="text-muted">
+                                                                    <h5 class="font-size-16 mb-3">Người thanh toán:</h5>
+                                                                    <h5 class="font-size-15 mb-2">@item.hoTen</h5>
+                                                                    <p class="mb-1">@item.SoNha, @item.PhuongXa, @item.QuanHuyen, @item.TinhThanh</p>
+                                                                    <p class="mb-1">@item.eMail</p>
+                                                                    <p>@item.sDt</p>
+                                                                </div>
+                                                            </div>
+                                                            <!-- end col -->
+                                                            <div class="col-sm-6">
+                                                                <div class="text-muted text-sm-end tx-align">
+                                                                    <div>
+                                                                        <h5 class="font-size-15 mb-1">Số hóa đơn : <span>@item.Id</span></h5>
+                                                                        <p></p>
+                                                                    </div>
+                                                                    <div class="mt-4">
+                                                                        <h5 class="font-size-15 mb-1">Ngày lập hóa đơn :</h5>
+                                                                        <p>@item.NgayThanhToan.ToString("dd/M/yyyy hh:mm tt")</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- end col -->
+                                                        </div>
+
+                                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                                            <h5 class="font-size-15 mb-2">Thông tin đơn hàng</h5>
+                                                        </div>
+                                                        @{
+                                                            decimal sumindex = 0;
+                                                        }
+                                                        @foreach (var itemproduct in hoadonList[indexx])
+                                                        {
+                                                            <div class="card shadow-0 border mb-4">
+                                                                <div class="card-body">
+                                                                    <div class="row gap-6-0">
+                                                                        <div class="col-md-2">
+                                                                            <img src="~/upload/@itemproduct.hinhAnh" class="img-fluid" alt="Phone">
+                                                                        </div>
+                                                                        <div class="col-md-4 text-center d-flex justify-content-center align-items-center">
+                                                                            <p class="text-muted mb-0">@itemproduct.tenGao</p>
+                                                                        </div>
+                                                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                                            <p class="text-muted mb-0 white-space">Loại: @itemproduct.khoiLuong kg</p>
+                                                                        </div>
+                                                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                                            <p class="text-muted mb-0 white-space">Số lượng: @itemproduct.soLuong</p>
+                                                                        </div>
+                                                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                                            <p class="text-muted mb-0 ">
+                                                                                @{
+                                                                                    string priceq = (itemproduct.gia * itemproduct.khoiLuong * itemproduct.soLuong).ToString("#,##0") + "₫";
+                                                                                }@priceq
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    @{
+                                                                        sumindex += itemproduct.soLuong * itemproduct.khoiLuong * itemproduct.gia;
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        
+                                                        <div class="row justify-content-between gap-12-0">
+                                                            <div class="col-md-7">
+                                                            </div>
+                                                            <div class="col-md-5 tx-align" style="text-align: right">
+                                                                <p class="text-muted mb-1"><span class="fw-bold me-4">Tạm tính: </span>@{
+                                                                        string price = sumindex.ToString("#,##0") + "₫";
+                                                                    }@price</p>
+                                                                <p class="text-muted mb-1"><span class="fw-bold me-4">Phí vận chuyển: </span>0₫</p>
+                                                                <p class="text-muted mb-1"><span class="fw-bold me-4">Tổng: </span>@price</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer border-top-solid border-0 px-4 py-5 bg-secondary" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                                                        <h5 class="d-flex align-items-center justify-content-end text-white mb-0">Số tiền đã thanh toán: <span class="h2 mb-0 ms-2 ml-12 text-white"> @price</span></h5>
+                                                    </div>
+                                                    <div class="d-print-none mt-4">
+                                                        <div class="float-end">
+                                                            <button onclick="printModalContent('#Modal@(indexx)')" class="btn btn-success me-1"><i class="ti-printer"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="myModal-@i" class="modal fade">
+                                    <div class="modal-dialog modal-confirm">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <div class="icon-box">
+                                                    <i class="ti-close"></i>
+                                                </div>
+                                                <h4 class="modal-title">Bạn chắc chắn chứ?</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Bạn có chắc muốn xóa các bản ghi này không? Thao tác này không thể hoàn tác</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-info" data-dismiss="modal">Hủy bỏ</button>
+                                                <form method="post" asp-action="Delete" asp-route-id ="@item.Id">
+                                                    <button type="submit" class="btn btn-danger">Xóa</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@{string price1 = item.Gia.ToString("#,##0") + "₫";}@price1</td>
+                                    <td>@item.NgayThanhToan.ToString("dd/M/yyyy hh:mm tt")</td>
+                                    <td>@item.hoTen</td>
+                                    @if(item.TrangThai == 0){
+                                        <td class="text-warning" role="alert">Đang xử lí</td>
+                                    }
+                                    @if(item.TrangThai == 1){
+                                        <td class="text-info" role="alert">Đang giao</td>
+                                    }
+                                    @if(item.TrangThai == 2){
+                                        <td class="text-success" role="alert">Đã giao</td>
+                                    }
+                                    <td>@item.TinhThanh</td>
+                                    <td>@item.QuanHuyen</td>
+                                    <td>@item.PhuongXa</td>
+                                    <td>@item.SoNha</td>
+                                    <td>
+                                        <div class="d-flex justify-content-end">
+                                            @if(item.TrangThai == 0){
+                                                <form method="post" asp-action="Update" asp-route-id="@item.Id" asp-route-trangth ="1">
+                                                    <button type="submit" class="btn btn-info">Đang giao</button>
+                                                </form>
+                                                <button type="button" disabled class="btn btn-success">Đã giao</button>
+                                            }
+                                            @if(item.TrangThai == 1)
+                                            {
+                                                <button type="button" disabled class="btn btn-info">Đang giao</button>
+                                                <form method="post" asp-action="Update" asp-route-id="@item.Id" asp-route-trangth="2">
+                                                    <button type="submit" class="btn btn-success">Đã giao</button>
+                                                </form>
+                                            }
+                                            @if(item.TrangThai == 2)
+                                            {
+                                                <button type="button" disabled class="btn btn-info">Đang giao</button>
+                                                <button type="submit" disabled class="btn btn-success">Đã giao</button>
+                                            }
+                                        </div>                                        
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-end">
+                                            <a href="#Modal@(indexx)" data-toggle="modal"><i class="ti-eye button-eye mr-2"></i></a>
+                                            <a href="#myModal-@i" data-toggle="modal"><i class="ti-trash button-remove"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <span style="display: none">@(indexx++)</span>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

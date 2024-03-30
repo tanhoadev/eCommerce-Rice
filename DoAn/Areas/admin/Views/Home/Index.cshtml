@@ -1,0 +1,269 @@
+﻿@model IEnumerable<DoAn.Areas.admin.Models.HoaDon>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/admin/Views/Share/_layoutAdmin.cshtml";
+    List<DoAn.Areas.admin.Models.HoaDon> hd = ViewData["hoadon"] as List<DoAn.Areas.admin.Models.HoaDon>;
+}
+
+<div class="row">
+    <div class="col-lg-8 p-r-0 title-margin-right">
+        <div class="page-header">
+            <div class="page-title">
+                <h1>Hello, <span>Welcome Here</span></h1>
+            </div>
+        </div>
+    </div>
+    <!-- /# column -->
+    <div class="col-lg-4 p-l-0 title-margin-left">
+        <div class="page-header">
+            <div class="page-title">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Home</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- /# column -->
+</div>
+
+<section id="main-content">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="stat-widget-one">
+                    <div class="stat-icon dib">
+                        <i class="ti-money color-success border-success"></i>
+                    </div>
+                    <div class="stat-content dib">
+                        <div class="stat-text">Tổng doanh thu</div>
+                        <div class="stat-digit">
+                            @{
+                                string price1a = ViewBag.doanhThu.ToString("#,##0") + "₫";
+                            }
+                            @price1a
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="stat-widget-one">
+                    <div class="stat-icon dib">
+                        <i class="ti-user color-primary border-primary"></i>
+                    </div>
+                    <div class="stat-content dib">
+                        <div class="stat-text">Người dùng</div>
+                        <div class="stat-digit">@ViewBag.nguoiDung</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="stat-widget-one">
+                    <div class="stat-icon dib">
+                        <i class="ti-shopping-cart color-pink border-pink"></i>
+                    </div>
+                    <div class="stat-content dib">
+                        <div class="stat-text">Đơn hàng</div>
+                        <div class="stat-digit">@ViewBag.hoaDonx</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="stat-widget-one">
+                    <div class="stat-icon dib"><i class="ti-notepad color-danger border-danger"></i></div>
+                    <div class="stat-content dib">
+                        <div class="stat-text">Chờ duyệt</div>
+                        <div class="stat-digit">@ViewBag.choDuyet</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-title">
+                    <h4>Doanh thu</h4>
+
+                </div>
+                <div class="card-body">
+                    <div class="ct-bar-chart m-t-30 d-flex justify-content-center" style="height: 345px !important">
+                        <canvas class="" id="myChart"></canvas>
+                    </div>
+
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+                    <script>
+                        const ctx = document.getElementById('myChart');
+
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: @Html.Raw(Json.Serialize(hd.Select((x => x.NgayThanhToan.ToString("MM/yyyy"))).ToList())),
+                                datasets: [{
+                                    label: 'Năm 2023',
+                                    data: @Html.Raw(Json.Serialize(hd.Select(x => x.Gia).ToList())),
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- /# row -->
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-title">
+                    <h4>Task</h4>
+
+                </div>
+                <div class="todo-list">
+                    <div class="tdl-holder">
+                        <div class="tdl-content">
+                            <ul>
+                                <li>
+                                    <label>
+                                        <input type="checkbox"><i></i><span>
+                                            22,Dec Publish The Final
+                                            Exam Result
+                                        </span>
+                                        <a href='#' class="ti-close"></a>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label>
+                                        <input type="checkbox" checked><i></i><span>
+                                            First Jan Start Our
+                                            School
+                                        </span>
+                                        <a href='#' class="ti-close"></a>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label>
+                                        <input type="checkbox"><i></i><span>
+                                            Recently Our Maganement
+                                            Programme Start
+                                        </span>
+                                        <a href='#' class="ti-close"></a>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label>
+                                        <input type="checkbox" checked><i></i><span>
+                                            Check out some
+                                            Popular courses
+                                        </span>
+                                        <a href='#' class="ti-close"></a>
+                                    </label>
+                                </li>
+
+                                <li>
+                                    <label>
+                                        <input type="checkbox" checked><i></i><span>
+                                            First Jan Start Our
+                                            School
+                                        </span>
+                                        <a href='#' class="ti-close"></a>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label>
+                                        <input type="checkbox" checked><i></i><span>
+                                            Connect with one new
+                                            person
+                                        </span>
+                                        <a href='#' class="ti-close"></a>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                        <input type="text" class="tdl-new form-control" placeholder="Write new item and hit 'Enter'...">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-title pr">
+                    <h4>All Expense</h4>
+
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table student-data-table m-t-20">
+                            <thead>
+                                <tr>
+                                    <th><label><input type="checkbox" value=""></label>ID</th>
+                                    <th>Tổng</th>
+                                    <th>Trạng thái</th>
+                                    <th>Tên khách hàng</th>
+                                    <th>Ngày thanh toán</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(var itemx in Model)
+                                {
+                                    <tr>
+                                        <td><label><input type="checkbox" value=""></label>#@itemx.Id</td>
+                                        <td>
+                                            @{string price1 = itemx.Gia.ToString("#,##0") + "₫";
+                                            }@price1
+                                        </td>
+                                        <td>
+                                            @if (itemx.TrangThai == 0)
+                                            {
+                                                <span class="badge badge-warning">Chưa xử lý</span>
+                                            }
+                                            @if (itemx.TrangThai == 1)
+                                            {
+                                                <span class="badge badge-primary">Đang giao</span>
+                                            }
+                                            @if (itemx.TrangThai == 2)
+                                            {
+                                                <span class="badge badge-success">Thành công</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @itemx.hoTen
+                                        </td>
+                                        <td>
+                                            @itemx.NgayThanhToan.ToString("dd/M/yyyy hh:mm tt")
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /# column -->
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="footer">
+                <p>2018 © Admin Board. - <a href="#">example.com</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+

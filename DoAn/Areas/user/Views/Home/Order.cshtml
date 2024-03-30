@@ -1,0 +1,175 @@
+﻿@model IEnumerable<DoAn.Areas.admin.Models.HoaDon>
+@{
+    ViewData["Title"] = "Order";
+    Layout = "~/Areas/user/Views/Share/_layoutUser.cshtml";
+    List<IEnumerable<DoAn.Areas.admin.Models.ChiTietHoaDon>> hoadonList = new List<IEnumerable<DoAn.Areas.admin.Models.ChiTietHoaDon>>();
+    for (int i = 0; i < Model.Count(); i++)
+    {
+        IEnumerable<DoAn.Areas.admin.Models.ChiTietHoaDon> hoadon = ViewData["hoadon" + i] as IEnumerable<DoAn.Areas.admin.Models.ChiTietHoaDon>;
+        hoadonList.Add(hoadon);
+    }
+}
+
+<div class="container-fluid bg-secon-img mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color: #fff;">Lịch sử mua hàng</h1>
+    </div>
+</div>
+
+<div class="container-fluid ">
+    <div class="card shadow-0 border mb-4">
+        @{
+            int indexHoadon = 0;
+        }
+        @foreach (var itemHoadon in Model)
+        {
+            <div class="card-body bb">
+                <div class="row px-xl-5 gap-12-0">
+                    <div class="col-md-3 col-lg-3 text-center d-flex justify-content-center align-items-center">
+                        <p class="text-muted mb-0">Thời gian đặt: @itemHoadon.NgayThanhToan.ToString("dd/M/yyyy hh:mm tt")</p>
+                    </div>
+                    <div class="col-md-2 col-lg-2 text-center d-flex justify-content-center align-items-center">
+                        @{
+                            if (itemHoadon.TrangThai == 0)
+                            {
+                                <div class="alert alert-warning" role="alert">
+                                    Đang xử lí hàng
+                                </div>
+                            }
+                            else if (itemHoadon.TrangThai == 1)
+                            {
+                                <div class="alert alert-info" role="alert">
+                                    Đang giao hàng
+                                </div>
+                            }
+                            else if (itemHoadon.TrangThai == 2)
+                            {
+                                <div class="alert alert-success mb-0" role="alert">
+                                    Đã giao hàng
+                                </div>
+                            }
+                        }
+                    </div>
+                    <div class="col-md-3 col-lg-3 text-center d-flex justify-content-center align-items-center">
+                        <p class="text-muted mb-0">Tổng số lượng: @ViewData["sumTotal" + indexHoadon]</p>
+                    </div>
+                    <div class="col-md-2 col-lg-2 text-center d-flex justify-content-center align-items-center">
+                        <p class="text-muted mb-0">Tổng tiền: @{string pricea = itemHoadon.Gia.ToString("#,##0") + "₫";}@pricea</p>
+                    </div>
+                    <div class="col-md-2 col-lg-2 text-center d-flex justify-content-center align-items-center">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal@(indexHoadon)">
+                            Xem chi tiết
+                        </button>
+                    </div>
+                    <!-- Modal dialog-->
+                    <div class="modal  fade p-0" id="Modal@(indexHoadon)" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content Modal1" style="border-radius: 13px;">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body p-0">
+                                    <div class="card m-0" style="border-radius: 10px;">
+                                        <div class="card-body p-4">
+                                            <div class="invoice-title">
+                                                <div class="d-flex justify-content-between">
+                                                    <div class="mb-4">
+                                                        <h2 class="mb-1 text-muted">Gạo Quyên</h2>
+                                                    </div>
+                                                    <h4 class="font-size-15">Hóa đơn #@itemHoadon.Id</h4>
+                                                </div>
+                                                <div class="text-muted">
+                                                    <p class="mb-1">134 Linh Trung, Phường Linh Trung, Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam</p>
+                                                    <p class="mb-1"><i class="uil uil-envelope-alt me-1"></i> shopquyen@gmail.com</p>
+                                                    <p><i class="uil uil-phone me-1"></i> 012-345-6789</p>
+                                                </div>
+                                            </div>
+                                            <hr class="my-4">
+
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="text-muted">
+                                                        <h5 class="font-size-16 mb-3">Người thanh toán:</h5>
+                                                        <h5 class="font-size-15 mb-2">@itemHoadon.hoTen</h5>
+                                                        <p class="mb-1">@itemHoadon.SoNha, @itemHoadon.PhuongXa, @itemHoadon.QuanHuyen, @itemHoadon.TinhThanh</p>
+                                                        <p class="mb-1">@itemHoadon.eMail</p>
+                                                        <p>@itemHoadon.sDt</p>
+                                                    </div>
+                                                </div>
+                                                <!-- end col -->
+                                                <div class="col-sm-6">
+                                                    <div class="text-muted text-sm-end tx-align">
+                                                        <div>
+                                                            <h5 class="font-size-15 mb-1">Số hóa đơn : <span>@itemHoadon.Id</span></h5>
+                                                            <p></p>
+                                                        </div>
+                                                        <div class="mt-4">
+                                                            <h5 class="font-size-15 mb-1">Ngày lập hóa đơn :</h5>
+                                                            <p>@itemHoadon.NgayThanhToan.ToString("dd/M/yyyy hh:mm tt")</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- end col -->
+                                            </div>
+
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h5 class="font-size-15 mb-2">Thông tin đơn hàng</h5>
+                                            </div>
+                                            @{decimal sumindex = 0;}
+                                            @foreach (var item in hoadonList[indexHoadon])
+                                            {
+                                                <div class="card shadow-0 border mb-4">
+                                                    <div class="card-body">
+                                                        <div class="row gap-6-0">
+                                                            <div class="col-md-2">
+                                                                <img src="~/upload/@item.hinhAnh" class="img-fluid" alt="Phone">
+                                                            </div>
+                                                            <div class="col-md-4 text-center d-flex justify-content-center align-items-center">
+                                                                <p class="text-muted mb-0">@item.tenGao</p>
+                                                            </div>
+                                                            <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                                <p class="text-muted mb-0 white-space">Loại: @item.khoiLuong kg</p>
+                                                            </div>
+                                                            <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                                <p class="text-muted mb-0 white-space">Số lượng: @item.soLuong</p>
+                                                            </div>
+                                                            <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                                <p class="text-muted mb-0 ">@{string priceq = (item.gia * item.khoiLuong * item.soLuong).ToString("#,##0") + "₫";}@priceq</p>
+                                                            </div>
+                                                        </div>
+                                                        @{sumindex += item.soLuong * item.khoiLuong * item.gia;}
+                                                    </div>
+                                                </div>
+                                            }
+                                            <div class="row justify-content-between gap-12-0">
+                                                <div class="col-md-7">
+                                                </div>
+                                                <div class="col-md-5 tx-align">
+                                                    <p class="text-muted mb-1"><span class="fw-bold me-4">Tạm tính: </span>@{string price = sumindex.ToString("#,##0") + "₫";}@price</p>
+                                                    <p class="text-muted mb-1"><span class="fw-bold me-4">Phí vận chuyển: </span>0₫</p>
+                                                    <p class="text-muted mb-1"><span class="fw-bold me-4">Tổng: </span>@price</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer border-top-solid border-0 px-4 py-5 bg-secondary" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                                            <h5 class="d-flex align-items-center justify-content-end text-white mb-0">Số tiền đã thanh toán: <span class="h2 mb-0 ms-2 ml-12 text-white"> @price</span></h5>
+                                        </div>
+                                        <div class="d-print-none mt-4">
+                                            <div class="float-end">
+                                                <button onclick="printModalContent('#Modal@(indexHoadon)')" class="btn btn-success me-1"><i class="fa fa-print"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <span style="display: none">@(indexHoadon++)</span>
+        }
+    </div>
+
+</div>
